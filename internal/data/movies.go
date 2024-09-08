@@ -1,6 +1,7 @@
 package data
 
 import (
+	"context"
 	"time"
 
 	"github.com/edgedb/edgedb-go"
@@ -39,7 +40,9 @@ type MovieModel struct {
 }
 
 func (m MovieModel) Insert(movie *Movie) error {
-	return nil
+	var inserted struct{ id edgedb.UUID }
+	args := []interface{}{movie.Title, movie.Year, movie.Runtime, movie.Genres, movie.Version}
+	return m.DB.QuerySingle(context.Background(), "", &inserted, args)
 }
 
 func (m MovieModel) Get(id edgedb.UUID) error {
