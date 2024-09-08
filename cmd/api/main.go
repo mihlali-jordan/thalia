@@ -12,6 +12,7 @@ import (
 	"github.com/edgedb/edgedb-go"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/mihlali-jordan/thalia/internal/data"
 )
 
 const version = "1.0.0"
@@ -24,6 +25,8 @@ type config struct {
 type application struct {
 	config config
 	logger *log.Logger
+	ctx    context.Context
+	models data.Models
 }
 
 func main() {
@@ -44,7 +47,11 @@ func main() {
 
 	logger.Printf("database connection established")
 
-	app := &application{config: cfg, logger: logger}
+	app := &application{
+		config: cfg,
+		logger: logger,
+		models: data.NewModels(db),
+	}
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
