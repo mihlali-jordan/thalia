@@ -2,11 +2,13 @@ module github.com/mihlali-jordan/thalia
 
 go 1.22.4
 
-require github.com/go-chi/chi/v5 v5.1.0
+require (
+	github.com/edgedb/edgedb-go v0.17.2
+	github.com/go-chi/chi/v5 v5.1.0
+)
 
 require (
 	github.com/certifi/gocertifi v0.0.0-20210507211836-431795d63e8d // indirect
-	github.com/edgedb/edgedb-go v0.17.2 // indirect
 	github.com/sigurn/crc16 v0.0.0-20240131213347-83fcde1e29d1 // indirect
 	github.com/xdg/scram v1.0.5 // indirect
 	github.com/xdg/stringprep v1.0.3 // indirect
