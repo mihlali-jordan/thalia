@@ -42,6 +42,8 @@ func main() {
 	}
 	defer db.Close()
 
+	logger.Printf("database connection established")
+
 	app := &application{config: cfg, logger: logger}
 
 	r := chi.NewRouter()
@@ -65,7 +67,11 @@ func main() {
 
 func openDB() (*edgedb.Client, error) {
 	ctx := context.Background()
+
 	db, err := edgedb.CreateClient(ctx, edgedb.Options{})
+	if err != nil {
+		return nil, err
+	}
 
 	return db, err
 }
