@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"log"
@@ -8,6 +9,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/edgedb/edgedb-go"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 )
@@ -32,6 +34,14 @@ func main() {
 	flag.Parse()
 
 	logger := log.New(os.Stdout, "", log.Ldate|log.Ltime)
+
+	// Initialise db
+	db, err := openDB()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
 	app := &application{config: cfg, logger: logger}
 
 	r := chi.NewRouter()
@@ -49,6 +59,13 @@ func main() {
 	}
 
 	logger.Printf("starting %s server on %s", cfg.env, srv.Addr)
-	err := srv.ListenAndServe()
+	err = srv.ListenAndServe()
 	logger.Fatal(err)
+}
+
+func openDB() (*edgedb.Client, error) {
+	ctx := context.Background()
+	db, err := edgedb.CreateClient(ctx, edgedb.Options{})
+
+	return db, err
 }
