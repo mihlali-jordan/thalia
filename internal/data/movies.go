@@ -13,7 +13,7 @@ type Movie struct {
 	CreatedAt time.Time   `edgedb:"created_at"`
 	Title     string      `edgedb:"title"`
 	Year      int32       `edgedb:"year"`
-	Runtime   Runtime     `edgedb:"runtime"`
+	Runtime   int32       `edgedb:"runtime"`
 	Genres    []string    `edgedb:"genres"`
 	Version   int32       `edgedb:"version"`
 }
@@ -50,8 +50,8 @@ func (m MovieModel) Insert(movie *Movie) error {
 		}
 	`
 
-	args := []interface{}{movie.Title, movie.Year, movie.Runtime, movie.Genres, movie.Version}
-	return m.DB.QuerySingle(context.Background(), query, &inserted, args)
+	args := []interface{}{movie.Title, movie.Year, movie.Runtime, movie.Genres}
+	return m.DB.QuerySingle(context.Background(), query, &inserted, args...)
 }
 
 func (m MovieModel) Get(id edgedb.UUID) error {
