@@ -9,13 +9,13 @@ import (
 )
 
 type Movie struct {
-	ID        edgedb.UUID `edgedb:"id"`
-	CreatedAt time.Time   `edgedb:"created_at"`
-	Title     string      `edgedb:"title"`
-	Year      int32       `edgedb:"year"`
-	Runtime   int32       `edgedb:"runtime"`
-	Genres    []string    `edgedb:"genres"`
-	Version   int32       `edgedb:"version"`
+	ID        edgedb.UUID          `edgedb:"id"`
+	CreatedAt edgedb.LocalDateTime `edgedb:"created_at"`
+	Title     string               `edgedb:"title"`
+	Year      int32                `edgedb:"year"`
+	Runtime   int32                `edgedb:"runtime"`
+	Genres    []string             `edgedb:"genres"`
+	Version   int32                `edgedb:"version"`
 }
 
 func ValidateMovie(v *validator.Validator, movie *Movie) {
