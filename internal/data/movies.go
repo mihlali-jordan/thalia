@@ -1,20 +1,20 @@
-//go:generate edgeql-go -pubfuncs -pubtypes -mixedcaps
 package data
 
 import (
 	"time"
 
+	"github.com/edgedb/edgedb-go"
 	"github.com/mihlali-jordan/thalia/internal/validator"
 )
 
 type Movie struct {
-	ID        int64     `json:"id"`
-	CreatedAt time.Time `json:"created_at"`
-	Title     string    `json:"title"`
-	Year      int32     `json:"year"`
-	Runtime   Runtime   `json:"runtime"`
-	Genres    []string  `json:"genres"`
-	Version   int32     `json:"version"`
+	ID        edgedb.UUID `edgedb:"id"`
+	CreatedAt time.Time   `edgedb:"created_at"`
+	Title     string      `edgedb:"title"`
+	Year      int32       `edgedb:"year"`
+	Runtime   Runtime     `edgedb:"runtime"`
+	Genres    []string    `edgedb:"genres"`
+	Version   int32       `edgedb:"version"`
 }
 
 func ValidateMovie(v *validator.Validator, movie *Movie) {
@@ -32,4 +32,24 @@ func ValidateMovie(v *validator.Validator, movie *Movie) {
 	v.Check(len(movie.Genres) >= 1, "genres", "must contain at least one genre")
 	v.Check(len(movie.Genres) <= 5, "genres", "must not contain more than 5 genres")
 	v.Check(validator.Unique(movie.Genres), "genres", "must not contain duplicate values")
+}
+
+type MovieModel struct {
+	DB *edgedb.Client
+}
+
+func (m MovieModel) Insert(movie *Movie) error {
+	return nil
+}
+
+func (m MovieModel) Get(id edgedb.UUID) error {
+	return nil
+}
+
+func (m MovieModel) Update(movie *Movie) error {
+	return nil
+}
+
+func (m MovieModel) Delete(id edgedb.UUID) error {
+	return nil
 }
