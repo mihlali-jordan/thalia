@@ -25,7 +25,6 @@ type config struct {
 type application struct {
 	config config
 	logger *log.Logger
-	ctx    context.Context
 	models data.Models
 }
 
