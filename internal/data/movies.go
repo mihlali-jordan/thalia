@@ -1,3 +1,4 @@
+//go:generate edgeql-go -pubfuncs -pubtypes -mixedcaps
 package data
 
 import (
