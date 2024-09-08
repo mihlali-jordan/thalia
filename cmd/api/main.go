@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -41,7 +40,8 @@ func main() {
 	r.Get("/v1/healthcheck", app.healthcheckHandler)
 
 	srv := &http.Server{
-		Addr:         fmt.Sprintf(":%d", cfg.port),
+		// Addr:         fmt.Sprintf(":%d", cfg.port),
+		Addr:         "localhost:4000",
 		Handler:      app.routes(),
 		IdleTimeout:  time.Minute,
 		ReadTimeout:  10 * time.Second,
