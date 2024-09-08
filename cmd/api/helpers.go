@@ -6,20 +6,20 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"strconv"
 	"strings"
 
+	"github.com/edgedb/edgedb-go"
 	"github.com/go-chi/chi/v5"
 )
 
 type envelope map[string]interface{}
 
-func (app *application) readIDParam(r *http.Request) (int64, error) {
+func (app *application) readIDParam(r *http.Request) (edgedb.UUID, error) {
 	idString := chi.URLParam(r, "id")
 
-	id, err := strconv.ParseInt(idString, 10, 64)
-	if err != nil || id < 1 {
-		return 0, errors.New("invalid id parameter")
+	id, err := edgedb.ParseUUID(idString)
+	if err != nil {
+		return edgedb.UUID{}, errors.New("invalid id parameter: not a valid UUID")
 	}
 
 	return id, nil
