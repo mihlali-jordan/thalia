@@ -41,8 +41,17 @@ type MovieModel struct {
 
 func (m MovieModel) Insert(movie *Movie) error {
 	var inserted struct{ id edgedb.UUID }
+	query := `
+		INSERT Movie {
+			title := <str>$0,
+			year := <int32>$1,
+			runtime := <int32>$2,
+			genres := <array<str>>$3
+		}
+	`
+
 	args := []interface{}{movie.Title, movie.Year, movie.Runtime, movie.Genres, movie.Version}
-	return m.DB.QuerySingle(context.Background(), "", &inserted, args)
+	return m.DB.QuerySingle(context.Background(), query, &inserted, args)
 }
 
 func (m MovieModel) Get(id edgedb.UUID) error {
