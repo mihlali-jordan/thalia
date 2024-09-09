@@ -88,6 +88,7 @@ func (app *application) updateMovieHandler(w http.ResponseWriter, r *http.Reques
 	movie.Year = input.Year
 	movie.Runtime = input.Runtime
 	movie.Genres = input.Genres
+	movie.ID = id
 
 	v := validator.New()
 
