@@ -12,13 +12,13 @@ import (
 var edbErr edgedb.Error
 
 type Movie struct {
-	ID        edgedb.UUID          `edgedb:"id"`
-	CreatedAt edgedb.LocalDateTime `edgedb:"created_at"`
-	Title     string               `edgedb:"title"`
-	Year      int32                `edgedb:"year"`
-	Runtime   int32                `edgedb:"runtime"`
-	Genres    []string             `edgedb:"genres"`
-	Version   int32                `edgedb:"version"`
+	ID        edgedb.UUID          `edgedb:"id" json:"id"`
+	CreatedAt edgedb.LocalDateTime `edgedb:"created_at" json:"created_at"`
+	Title     string               `edgedb:"title" json:"title"`
+	Year      int32                `edgedb:"year" json:"year"`
+	Runtime   int32                `edgedb:"runtime" json:"runtime"`
+	Genres    []string             `edgedb:"genres" json:"genres"`
+	Version   int32                `edgedb:"version" json:"version"`
 }
 
 func ValidateMovie(v *validator.Validator, movie *Movie) {
@@ -70,7 +70,7 @@ func (m MovieModel) Get(id edgedb.UUID) (*Movie, error) {
 		} filter .id = <uuid>$0
 	`
 
-	err := m.DB.Query(context.Background(), query, &movie, id)
+	err := m.DB.QuerySingle(context.Background(), query, &movie, id)
 	if err != nil {
 		switch {
 		case errors.As(err, &edbErr) && edbErr.Category(edgedb.NoDataError):
