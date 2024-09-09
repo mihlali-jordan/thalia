@@ -1,3 +1,2 @@
-# Run the application using nodemon
-run-dev:
+rd:
 	go run ./cmd/api
