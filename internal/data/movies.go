@@ -95,5 +95,10 @@ func (m MovieModel) Update(movie *Movie) error {
 }
 
 func (m MovieModel) Delete(id edgedb.UUID) error {
-	return nil
+	var deleted struct{ id edgedb.UUID }
+	query := `
+		delete Movie
+		filter .id = <uuid>$0
+	`
+	return m.DB.QuerySingle(context.Background(), query, &deleted, id)
 }
