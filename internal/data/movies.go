@@ -2,11 +2,14 @@ package data
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/edgedb/edgedb-go"
 	"github.com/mihlali-jordan/thalia/internal/validator"
 )
+
+var edbErr edgedb.Error
 
 type Movie struct {
 	ID        edgedb.UUID          `edgedb:"id"`
@@ -54,8 +57,30 @@ func (m MovieModel) Insert(movie *Movie) error {
 	return m.DB.QuerySingle(context.Background(), query, &inserted, args...)
 }
 
-func (m MovieModel) Get(id edgedb.UUID) error {
-	return nil
+func (m MovieModel) Get(id edgedb.UUID) (*Movie, error) {
+	var movie Movie
+	query := `
+		SELECT Movie {
+			id,
+			title,
+			year,
+			runtime,
+			genres,
+			version
+		} filter .id = <uuid>$0
+	`
+
+	err := m.DB.Query(context.Background(), query, &movie, id)
+	if err != nil {
+		switch {
+		case errors.As(err, &edbErr) && edbErr.Category(edgedb.NoDataError):
+			return nil, ErrRecordNotFound
+		default:
+			return nil, err
+		}
+	}
+
+	return &movie, nil
 }
 
 func (m MovieModel) Update(movie *Movie) error {
