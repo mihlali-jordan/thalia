@@ -84,7 +84,14 @@ func (m MovieModel) Get(id edgedb.UUID) (*Movie, error) {
 }
 
 func (m MovieModel) Update(movie *Movie) error {
-	return nil
+	var updated struct{ id edgedb.UUID }
+	query := `
+		update Movie
+		filter .id = <uuid>$0
+		set { title := <str>$1, year := <int32>$2, runtime := <int32>%3, genres := <array<str>>$4}
+	`
+	args := []interface{}{movie.ID, movie.Title, movie.Year, movie.Runtime, movie.Genres}
+	return m.DB.QuerySingle(context.Background(), query, &updated, args...)
 }
 
 func (m MovieModel) Delete(id edgedb.UUID) error {
